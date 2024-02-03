@@ -32,7 +32,9 @@ Execute the script directly from the terminal to move the active window:
 To bind this script to a keyboard shortcut:
 
 1: Open "Settings" > "Keyboard Shortcuts" in your desktop environment.
+
 2: Create a new shortcut, set the command to the full path of the script, e.g., /path/to/windowtoggle.sh.
+
 3: Assign a key combination of your choice.
 
 ## Contributing
