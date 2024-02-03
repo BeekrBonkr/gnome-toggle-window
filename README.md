@@ -1,4 +1,4 @@
-# Window Mover Script
+# gnome-toggle-window
 
 This script allows you to move the active window to the left or right on a dual-monitor setup without affecting maximized or fullscreen windows. It's designed for use on Linux systems with X11 and requires `xdotool` and `wmctrl`.
 
