@@ -1,21 +1,24 @@
 #!/bin/bash
 
-#Set your monitor height and width here!
-monitor_width=2560 
-monitor_height=1440
-
+# Check if any window is selected and exit if none
 active_window_id=$(xdotool getactivewindow)
-is_fullscreen=$(xprop -id $active_window_id _NET_WM_STATE | grep '_NET_WM_STATE_FULLSCREEN')
-if [ ! -z "$is_fullscreen" ]; then exit; fi
+[ -z "$active_window_id" ] && exit
 
-eval $(xdotool getwindowgeometry --shell $active_window_id)
-if [ "$WIDTH" -eq $monitor_width ] && [ "$HEIGHT" -eq $monitor_height ]; then exit; fi
+# Check if the active window is in fullscreen mode and exit if it is
+xprop -id "$active_window_id" _NET_WM_STATE | grep -q '_NET_WM_STATE_FULLSCREEN' && exit
 
-is_maximized=$(xprop -id $active_window_id _NET_WM_STATE | grep '_NET_WM_STATE_MAXIMIZED_VERT\|_NET_WM_STATE_MAXIMIZED_HORZ')
-if [ ! -z "$is_maximized" ]; then wmctrl -ir $active_window_id -b remove,maximized_vert,maximized_horz; fi
+# Get the X position of the current window
+window_x=$(xdotool getwindowgeometry --shell "$active_window_id" | grep "^X=" | cut -d'=' -f2)
 
-current_monitor=$(( $X / $monitor_width ))
-new_x=$(( current_monitor == 0 ? $X + $monitor_width : $X - $monitor_width ))
+# Determine the current monitor by dividing the X position by the monitor width
+monitor_width=2560  # Set your monitor width here
+current_monitor=$(( window_x / monitor_width ))
 
-xdotool windowmove $active_window_id $new_x $Y
-if [ ! -z "$is_maximized" ]; then wmctrl -ir $active_window_id -b add,maximized_vert,maximized_horz; fi
+# Use xdotool to move the window to the other monitor
+xdotool keydown Super
+if [ $current_monitor -eq 0 ]; then
+    xdotool key Right
+else
+    xdotool key Left
+fi
+xdotool keyup Super
