@@ -1,42 +1,91 @@
 # gnome-toggle-window
 
-This script allows you to move the active window to the left or right on a dual-monitor setup without affecting maximized or fullscreen windows. It's designed for use on Linux systems with X11 and requires `xdotool` and `wmctrl`.
+<div align="center">
 
-## Prerequisites
+<a href="https://ko-fi.com/bkrbnkr"><img alt="Support me on Ko-fi" src="https://img.shields.io/badge/Ko--fi-buy_me_a_coffee-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white"></a>
+
+</div>
+
+A small bash script that moves the active window to the other monitor on a
+dual-monitor X11 desktop. I bind it to a key so one press throws a window
+across.
+
+## How it works
+
+1. Gets the active window with `xdotool`.
+2. Reads the window's `_NET_WM_STATE` with `xprop` and exits if the window is
+   fullscreen, so a fullscreen video or game is left alone.
+3. Works out which monitor the window is on by dividing its X position by the
+   monitor width.
+4. Presses Super+Right if the window is on the left monitor, or Super+Left if
+   it is on the right one.
+
+The monitor width is hardcoded near the top of the script
+(`monitor_width=2560`). Change it to match your monitors. The script assumes
+two monitors of the same width, side by side.
+
+The script only sends the key press. Super+Left and Super+Right need to be
+bound to "Move window one monitor to the left / right" in your keyboard
+settings. In stock GNOME those keys tile the window to half the screen
+instead.
+
+## Requirements
+
+- An X11 session (it does not work on Wayland)
 - `xdotool`
-- `wmctrl`
+- `xprop` (part of `x11-utils` on Debian and Ubuntu, `xorg-x11-utils` on
+  Fedora)
 
-You can install these utilities using your distribution's package manager. For example, on Ubuntu:
+For example, on Ubuntu:
 
 ```bash
-sudo apt-get install xdotool wmctrl
+sudo apt-get install xdotool x11-utils
 ```
 
-## Installation
-Clone this repository or download the script file.
-Make the script executable:
+## Install
+
+1. Clone this repository or download `windowtoggle.sh`.
+2. Set `monitor_width` in the script to the width of one of your monitors.
+3. Make the script executable:
 
 ```bash
 chmod +x windowtoggle.sh
 ```
 
 ## Usage
-Execute the script directly from the terminal to move the active window:
+
+Run it from a terminal to move the active window:
 
 ```bash
 ./windowtoggle.sh
 ```
 
-## Setting Up as a Keybind
+To bind it to a key:
 
-To bind this script to a keyboard shortcut:
+1. Open Settings, then Keyboard, then Keyboard Shortcuts.
+2. Add a custom shortcut with the full path of the script as the command, for
+   example `/home/you/bin/windowtoggle.sh`.
+3. Pick a key combination.
 
-1: Open "Settings" > "Keyboard Shortcuts" in your desktop environment.
+Issues and pull requests are welcome.
 
-2: Create a new shortcut, set the command to the full path of the script, e.g., /path/to/windowtoggle.sh.
+---
 
-3: Assign a key combination of your choice.
+## Support
 
-## Contributing
+<div align="center">
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for improvements or bug fixes.
+This project is free and open source, and I work on it in my spare time.<br>
+If it saved you some time, you can buy me a coffee. No pressure - the code stays free either way.
+
+<a href="https://ko-fi.com/bkrbnkr"><img alt="Support me on Ko-fi" src="https://img.shields.io/badge/Ko--fi-bkrbnkr-FF5E5B?style=for-the-badge&logo=kofi&logoColor=white"></a>
+
+</div>
+
+<!-- more ways to support go here -->
+<!-- - [PayPal](...) -->
+<!-- - [GitHub Sponsors](...) -->
+
+## License
+
+Public domain under the [Unlicense](LICENSE).
